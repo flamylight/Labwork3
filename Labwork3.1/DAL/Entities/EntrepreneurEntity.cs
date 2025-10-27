@@ -2,7 +2,7 @@ namespace DAL.Entities;
 using MessagePack;
 
 [MessagePackObject]
-public class EntrepreneurEntity: PersonEntity
+public class EntrepreneurEntity: PersonEntity, ISerializeUser
 {
     [Key(2)]
     public int Age { get; set; }
@@ -15,5 +15,19 @@ public class EntrepreneurEntity: PersonEntity
     {
         Age = age;
         IdCode = idCode;
+    }
+    
+    public string SerializeData()
+    {
+        return $"{Name};{LastName};{Age};{IdCode}";
+    }
+    
+    public void FromDataString(string line)
+    {
+        var parts = line.Split(';');
+        Name = parts[0];
+        LastName = parts[1];
+        Age = int.Parse(parts[2]);
+        IdCode = int.Parse(parts[3]);
     }
 }

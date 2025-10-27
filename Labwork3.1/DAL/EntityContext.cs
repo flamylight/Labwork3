@@ -1,5 +1,5 @@
 ﻿using DAL.DataProvider;
-
+using DAL.Entities;
 namespace DAL;
 
 public class EntityContext
@@ -9,9 +9,9 @@ public class EntityContext
     private JSONProvider _jp = new JSONProvider();
     private XMLProvider _xml = new XMLProvider();
     private BinaryProvider _binary = new BinaryProvider();
-
+    private UserProvider _user = new UserProvider();
     
-    public List<T> ReadAll<T>(string type, string path) where T : class
+    public List<T> ReadAll<T>(string type, string path) where T : class, ISerializeUser, new()
     {
         
         switch (type.ToLower())
@@ -25,11 +25,14 @@ public class EntityContext
             case "binary":
                 var resultB = _binary.Deserialize<T>(path);
                 return resultB;
+            case "user":
+                var resultU = _user.Deserialize<T>(path);
+                return resultU;
         }
         return null;
     }
 
-    public void WriteAll<T>(List<T> list, string type, string path) where T : class
+    public void WriteAll<T>(List<T> list, string type, string path) where T : class, ISerializeUser
     {
         switch (type.ToLower())
         {
@@ -41,6 +44,9 @@ public class EntityContext
                 break;
             case "binary":
                 _binary.Serialize(list, path);
+                break;
+            case "user":
+                _user.Serialize(list, path);
                 break;
         }
     }

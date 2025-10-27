@@ -3,7 +3,7 @@ using System.Text.Json;
 
 public class JSONProvider: DataProvider
 {
-    
+
     public override void Serialize<T>(List<T> persons, string path)
     {
         var json = JsonSerializer.Serialize(persons);

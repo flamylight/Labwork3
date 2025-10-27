@@ -2,7 +2,7 @@ namespace DAL.Entities;
 using MessagePack;
 
 [MessagePackObject]
-public class StudentEntity: PersonEntity
+public class StudentEntity: PersonEntity, ISerializeUser
 {
     [Key(2)]
     public int Course { get; set; }
@@ -19,5 +19,20 @@ public class StudentEntity: PersonEntity
         Course = course;
         StudId = studId;
         DateOfBirth = dateOfBirth;
+    }
+    
+    public string SerializeData()
+    {
+        return $"{Name};{LastName};{Course};{StudId};{DateOfBirth}";
+    }
+    
+    public void FromDataString(string line)
+    {
+        var parts = line.Split(';');
+        Name = parts[0];
+        LastName = parts[1];
+        Course = int.Parse(parts[2]);
+        StudId = parts[3];
+        DateOfBirth = DateTime.Parse(parts[4]);
     }
 }
